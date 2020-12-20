@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 
 namespace UnityDES.Utils
@@ -8,38 +6,27 @@ namespace UnityDES.Utils
     /// <summary>
     /// 
     /// </summary>
-    public class PriorityQueue<K, V> : IEnumerable<V>, IReadOnlyCollection<V>
-        where K : IComparable<K>
-        where V : class
+    public class PriorityQueue<TItem> : IQueue<TItem, int>
+        where TItem : IQueueItem<int>
     {
-        protected SortedDictionary<K, LinkedList<V>> itemLists;
+        /// <summary>
+        /// The items in the queue.
+        /// </summary>
+        protected MinHeap<TItem> items;
 
-        public int Count => itemLists.Sum(entry => entry.Value.Count);
+        /// <summary>
+        /// Count of the items currently in the queue.
+        /// </summary>
+        public int Count => items.Count;
 
-        public V Dequeue()
-        {
-            var entries = itemLists.First().Value;
-            var entry = entries.First();
+        public void Enqueue(TItem item) => items.Add(item);
 
-            entries.RemoveFirst();
-            return entry;
-        }
+        public TItem Dequeue() => items.ExtractTop();
 
-        public void Enqueue(K key, V item)
-        {
-            var entries = itemLists[key];
-            if (entries == null)
-                entries = itemLists[key] = new LinkedList<V>();
+        public TItem Peek() => items.Peek();
 
-            entries.AddLast(item);
-        }
+        public IEnumerator<TItem> GetEnumerator() => items.GetEnumerator();
 
-        public V Peek() => itemLists.First().Value.First();
-
-        public K PeekKey() => itemLists.First().Key;
-
-        public IEnumerator<V> GetEnumerator() => (IEnumerator<V>)itemLists.GetEnumerator().Current.Value;
-
-        IEnumerator IEnumerable.GetEnumerator() => itemLists.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
     }
 }
