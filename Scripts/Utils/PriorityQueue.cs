@@ -4,29 +4,34 @@ using System.Collections.Generic;
 namespace UnityDES.Utils
 {
     /// <summary>
-    /// 
+    /// The queue in which the items are ordered by their keys.
     /// </summary>
-    public class PriorityQueue<TItem> : IQueue<TItem, int>
-        where TItem : IQueueItem<int>
+    public class PriorityQueue<TItem, TKey> : IQueue<TItem, TKey>
+        where TItem : IQueueItem<TKey>
     {
         /// <summary>
         /// The items in the queue.
         /// </summary>
-        protected MinHeap<TItem> items;
+        protected MinHeap<TItem> ItemHeap;
 
         /// <summary>
         /// Count of the items currently in the queue.
         /// </summary>
-        public int Count => items.Count;
+        public int Count => ItemHeap.Count;
 
-        public void Enqueue(TItem item) => items.Add(item);
+        public PriorityQueue(IComparer<TItem> comparer = null)
+        {
+            ItemHeap = new MinHeap<TItem>(null, comparer);
+        }
 
-        public TItem Dequeue() => items.ExtractTop();
+        public void Enqueue(TItem item) => ItemHeap.Add(item);
 
-        public TItem Peek() => items.Peek();
+        public TItem Dequeue() => ItemHeap.ExtractTop();
 
-        public IEnumerator<TItem> GetEnumerator() => items.GetEnumerator();
+        public TItem Peek() => ItemHeap.Peek();
 
-        IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
+        public IEnumerator<TItem> GetEnumerator() => ItemHeap.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => ItemHeap.GetEnumerator();
     }
 }
