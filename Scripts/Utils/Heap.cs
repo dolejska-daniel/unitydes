@@ -137,14 +137,14 @@ namespace UnityDES.Utils
             var nextNodeIndex = nodeIndex;
 
             var left = LeftChildIndex(nodeIndex);
-            if (left < nodeCount && IsGreaterThan(left, nextNodeIndex))
+            if (left < nodeCount && ShouldBeParentOf(left, nextNodeIndex))
             {
                 // the value of the left subnode is greater than the value of the root
                 nextNodeIndex = left;
             }
 
             var right = RightChildIndex(nodeIndex);
-            if (right < nodeCount && IsGreaterThan(right, nextNodeIndex))
+            if (right < nodeCount && ShouldBeParentOf(right, nextNodeIndex))
             {
                 // the value of the right subnode is greater than both the value of the left subnode and the root
                 nextNodeIndex = right;
@@ -176,7 +176,7 @@ namespace UnityDES.Utils
                 return;
 
             var parentNodeIndex = ParentIndex(nodeIndex);
-            if (IsGreaterThan(nodeIndex, parentNodeIndex))
+            if (ShouldBeParentOf(nodeIndex, parentNodeIndex))
             {
                 SwapNodes(nodeIndex, parentNodeIndex);
                 SiftUp(parentNodeIndex);
@@ -326,8 +326,11 @@ namespace UnityDES.Utils
         /// 
         /// <param name="indexA">Index of the first node</param>
         /// <param name="indexB">Index of the second node</param>
-        /// <returns><c>&gt;0</c> if value in node at <paramref name="indexA"/> is greater, <c>&lt;0</c> if the value is smaller or <c>0</c> if the values are equal</returns>
-        protected abstract bool IsGreaterThan(int indexA, int indexB);
+        /// <returns>
+        /// <c>True</c> if value in node at <paramref name="indexA"/> should be parent of value in node at <paramref name="indexB"/>,
+        /// <c>False</c> if it is the other way around or the values are equal
+        /// </returns>
+        protected abstract bool ShouldBeParentOf(int indexA, int indexB);
 
         public void CopyTo(TItem[] array, int arrayIndex) => Items.CopyTo(array, arrayIndex);
 

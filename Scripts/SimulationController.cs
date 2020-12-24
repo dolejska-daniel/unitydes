@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityDES.Utils;
 using UnityDES.Events;
+using System;
 
 namespace UnityDES
 {
@@ -12,6 +13,8 @@ namespace UnityDES
     public class SimulationController : ISimulationController<EventBase<SimulationTime>, SimulationTime>
     {
         public SimulationTime SimulationTime { get; protected set; }
+
+        public float DeltaTime { get; protected set; }
 
         public int SimulationSpeed { get; set; } = 1;
 
@@ -39,23 +42,36 @@ namespace UnityDES
         {
             while (true)
             {
-                RunAvailableTicks();
+                RunAvailableTicks(Time.deltaTime);
                 yield return null;
             }
         }
 
-        public void RunAvailableTicks()
-        {
-            // calculate number of ticks to be run
-            var tickCount = SimulationTime.TicksPerFrame * Time.deltaTime;
+        public void RunAvailableTicks() => RunAvailableTicks(Time.deltaTime);
 
-            // run the ticks
+        public void RunAvailableTicks(float deltaTime)
+        {
+            DeltaTime += deltaTime;
+
+            // calculate number of ticks to be run
+            var tickCount = (float)Math.Floor(SimulationTime.TicksPerFrame * DeltaTime);
+
+            // if any ticks are run, subtract the number of ticks from the passed time
+            DeltaTime -= tickCount * SimulationTime.TickLength;
+            // adjust simulation speed
+            tickCount *= SimulationSpeed;
+
+            // run the calculated number of ticks
             for (; tickCount > 0; tickCount--)
             {
                 RunTick();
             }
         }
 
+        /// <summary>
+        /// Runs all available events for current simulation time.
+        /// Accordingly updates current simulation time after all events have been processed.
+        /// </summary>
         public void RunTick()
         {
             // get the first event in the queue
@@ -71,7 +87,7 @@ namespace UnityDES
             }
 
             // update the simulation time
-            SimulationTime.DoTick(SimulationSpeed);
+            SimulationTime.DoTick();
         }
 
         public void Schedule(EventBase<SimulationTime> @event, int tickCount = 1)

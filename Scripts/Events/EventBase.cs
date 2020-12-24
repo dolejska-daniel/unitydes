@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityDES.Utils;
 
 namespace UnityDES.Events
 {
@@ -12,6 +11,8 @@ namespace UnityDES.Events
     public abstract class EventBase<TKey> : IEvent<EventBase<TKey>, TKey>
     {
         public TKey QueueKey { get; set; }
+
+        public TKey SimulationTime { get => QueueKey; }
 
         public IEnumerator<BehaviourResult> BehaviourCycle { get; protected set; }
 

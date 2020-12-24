@@ -3,7 +3,8 @@
 namespace UnityDES.Utils
 {
     /// <summary>
-    /// 
+    /// Max version of heap structure (and sort).
+    /// Topmost items on the heap will be items with the largest values.
     /// </summary>
     public class MaxHeap<V> : Heap<V>
     {
@@ -12,7 +13,7 @@ namespace UnityDES.Utils
         {
         }
 
-        protected override bool IsGreaterThan(int indexA, int indexB)
+        protected override bool ShouldBeParentOf(int indexA, int indexB)
         {
             return Comparer.Compare(Items[indexA], Items[indexB]) > 0;
         }

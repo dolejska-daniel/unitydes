@@ -12,6 +12,10 @@ public class EventTests
 
     public class PublicTestEvent : SimulationTimeEvent
     {
+        public PublicTestEvent(int ticksPerFrame = 10) : base(ticksPerFrame)
+        {
+        }
+
         public int State { get; protected set; } = 0;
 
         public override IEnumerator<BehaviourResult> Behaviour()

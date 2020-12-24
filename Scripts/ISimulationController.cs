@@ -33,7 +33,7 @@ namespace UnityDES
         /// <remarks>
         /// This method expects to be called every rendered frame.
         /// </remarks>
-        void RunAvailableTicks();
+        void RunAvailableTicks(float deltaTime);
 
         /// <summary>
         /// Adds the event (<paramref name="event"/>) to the simulation.

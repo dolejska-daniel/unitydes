@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace UnityDES
 {
+    /// <summary>
+    /// Structure representing concrete time position within the simulation.
+    /// </summary>
     public class SimulationTime
     {
         /// <summary>
@@ -24,7 +27,7 @@ namespace UnityDES
         /// <summary>
         /// Time length of a single tick of the simulation time.
         /// </summary>
-        public float TickLength { get; }
+        public float TickLength { get => 1f / TicksPerFrame; }
 
         public SimulationTime(SimulationTime simTime)
             : this(simTime.TicksPerFrame, simTime.Frame, simTime.Tick)
@@ -34,7 +37,6 @@ namespace UnityDES
         public SimulationTime(int ticksPerFrame, int frame = 0, int tick = 0)
         {
             TicksPerFrame = ticksPerFrame;
-            TickLength = 1f / ticksPerFrame;
             Frame = frame;
             Tick = tick;
         }
