@@ -12,6 +12,8 @@ namespace Utils
         {
             public new List<int> Items { get => base.Items; set => base.Items = value; }
 
+            public new Dictionary<int, int> ItemIndices { get => base.ItemIndices; set => base.ItemIndices = value; }
+
             public new void SiftDown(int nodeIndex) => base.SiftDown(nodeIndex);
 
             public new void SiftDown(int nodeIndex, int nodeCount) => base.SiftDown(nodeIndex, nodeCount);
@@ -250,33 +252,57 @@ namespace Utils
 
             heap = new PublicMaxHeap(new[] { 5, 2, 4, 6, 1, 3, 8 });
             heap.Heapify();
+            Assert.AreEqual(7, heap.Items.Count);
+            Assert.AreEqual(7, heap.ItemIndices.Count);
             heap.Add(9);
             Assert.AreEqual(9, heap.Items[0]);
+            Assert.AreEqual(8, heap.Items.Count);
+            Assert.AreEqual(8, heap.ItemIndices.Count);
 
             heap = new PublicMaxHeap(new[] { 8, 4, 6, 7, 1, 2, 0 });
             heap.Heapify();
+            Assert.AreEqual(7, heap.Items.Count);
+            Assert.AreEqual(7, heap.ItemIndices.Count);
             heap.Add(9);
             Assert.AreEqual(9, heap.Items[0]);
+            Assert.AreEqual(8, heap.Items.Count);
+            Assert.AreEqual(8, heap.ItemIndices.Count);
 
             heap = new PublicMaxHeap(new[] { 7, 6, 1, 4, 8, 3, 0 });
             heap.Heapify();
+            Assert.AreEqual(7, heap.Items.Count);
+            Assert.AreEqual(7, heap.ItemIndices.Count);
             heap.Add(9);
             Assert.AreEqual(9, heap.Items[0]);
+            Assert.AreEqual(8, heap.Items.Count);
+            Assert.AreEqual(8, heap.ItemIndices.Count);
 
             heap = new PublicMaxHeap(new[] { 5, 2, 4, 6, 1, 3, 8 });
             heap.Heapify();
+            Assert.AreEqual(7, heap.Items.Count);
+            Assert.AreEqual(7, heap.ItemIndices.Count);
             heap.Add(0);
             Assert.AreEqual(8, heap.Items[0]);
+            Assert.AreEqual(8, heap.Items.Count);
+            Assert.AreEqual(8, heap.ItemIndices.Count);
 
             heap = new PublicMaxHeap(new[] { 8, 4, 6, 7, 1, 2, 0 });
             heap.Heapify();
+            Assert.AreEqual(7, heap.Items.Count);
+            Assert.AreEqual(7, heap.ItemIndices.Count);
             heap.Add(3);
             Assert.AreEqual(8, heap.Items[0]);
+            Assert.AreEqual(8, heap.Items.Count);
+            Assert.AreEqual(8, heap.ItemIndices.Count);
 
             heap = new PublicMaxHeap(new[] { 7, 6, 1, 4, 8, 3, 0 });
             heap.Heapify();
+            Assert.AreEqual(7, heap.Items.Count);
+            Assert.AreEqual(7, heap.ItemIndices.Count);
             heap.Add(5);
             Assert.AreEqual(8, heap.Items[0]);
+            Assert.AreEqual(8, heap.Items.Count);
+            Assert.AreEqual(8, heap.ItemIndices.Count);
         }
 
 
@@ -287,22 +313,34 @@ namespace Utils
 
             heap = new PublicMaxHeap(new[] { 5, 2, 4, 6, 1, 3, 8 });
             heap.Heapify();
+            Assert.AreEqual(7, heap.Items.Count);
+            Assert.AreEqual(7, heap.ItemIndices.Count);
             heap.Remove(8);
             Assert.AreEqual(6, heap.Items[0]);
+            Assert.AreEqual(6, heap.Items.Count);
+            Assert.AreEqual(6, heap.ItemIndices.Count);
 
             heap = new PublicMaxHeap(new[] { 8, 4, 6, 7, 1, 2, 0 });
             heap.Heapify();
+            Assert.AreEqual(7, heap.Items.Count);
+            Assert.AreEqual(7, heap.ItemIndices.Count);
             heap.Remove(7);
             Assert.AreEqual(4, heap.Items[1]);
             Assert.AreEqual(8, heap.Items[0]);
+            Assert.AreEqual(6, heap.Items.Count);
+            Assert.AreEqual(6, heap.ItemIndices.Count);
 
             heap = new PublicMaxHeap(new[] { 7, 6, 1, 4, 8, 3, 5 });
             heap.Heapify();
+            Assert.AreEqual(7, heap.Items.Count);
+            Assert.AreEqual(7, heap.ItemIndices.Count);
             heap.Remove(8);
             heap.Remove(6);
             Assert.AreEqual(5, heap.Items[2]);
             Assert.AreEqual(4, heap.Items[1]);
             Assert.AreEqual(7, heap.Items[0]);
+            Assert.AreEqual(5, heap.Items.Count);
+            Assert.AreEqual(5, heap.ItemIndices.Count);
         }
 
         [Test]
@@ -312,13 +350,21 @@ namespace Utils
 
             heap = new PublicMaxHeap(new[] { 5, 2, 4, 6, 1, 3, 8 });
             heap.Heapify();
+            Assert.AreEqual(7, heap.Items.Count);
+            Assert.AreEqual(7, heap.ItemIndices.Count);
+
             Assert.AreEqual(8, heap.ExtractTop());
             Assert.AreEqual(6, heap.ExtractTop());
             Assert.AreEqual(5, heap.ExtractTop());
             Assert.AreEqual(4, heap.ExtractTop());
+            Assert.AreEqual(3, heap.Items.Count);
+            Assert.AreEqual(3, heap.ItemIndices.Count);
+
             Assert.AreEqual(3, heap.ExtractTop());
             Assert.AreEqual(2, heap.ExtractTop());
             Assert.AreEqual(1, heap.ExtractTop());
+            Assert.AreEqual(0, heap.Items.Count);
+            Assert.AreEqual(0, heap.ItemIndices.Count);
         }
 
         [Test]

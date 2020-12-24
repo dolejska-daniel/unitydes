@@ -7,7 +7,8 @@ namespace UnityDES.Utils
     /// </summary>
     public class MinHeap<V> : Heap<V>
     {
-        public MinHeap(IEnumerable<V> items = null, IComparer<V> comparer = null) : base(items, comparer)
+        public MinHeap(IEnumerable<V> items = null, IComparer<V> comparer = null)
+            : base(items, comparer)
         {
         }
 

@@ -41,7 +41,7 @@ namespace UnityDES.Utils
         /// <param name="comparer">Instance of the item comparer</param>
         public Heap(IEnumerable<TItem> items = null, IComparer<TItem> comparer = null)
         {
-            Items = new List<TItem>(items ?? new TItem[100]);
+            Items = new List<TItem>(items ?? new TItem[0]);
             ItemIndices = new Dictionary<TItem, int>(Items.Capacity);
             Comparer = (comparer ?? Comparer<TItem>.Default) ?? throw new ArgumentNullException(nameof(comparer));
 
@@ -101,6 +101,9 @@ namespace UnityDES.Utils
         /// </remarks>
         public void Heapify()
         {
+            for (var index = 0; index < Count; index++)
+                ItemIndices[Items[index]] = index;
+
             var nodeIndex = ParentIndex(Count - 1);
             while (nodeIndex >= 0)
                 SiftDown(nodeIndex--);
@@ -191,6 +194,7 @@ namespace UnityDES.Utils
         public void Add(TItem item)
         {
             Items.Add(item);
+            ItemIndices[item] = Count - 1;
             SiftUp(Count - 1);
         }
 
@@ -199,7 +203,7 @@ namespace UnityDES.Utils
         /// </summary>
         /// 
         /// <param name="item">Item which's key has changed</param>
-        /// <returns><c>True</c> if update of the tree has been successful, <c>False</c> otherwise</returns>
+        /// <returns><c>True</c> if the update of the tree has been successful, <c>False</c> otherwise</returns>
         public bool Update(TItem item)
         {
             var nodeIndex = IndexOf(item);
@@ -216,7 +220,7 @@ namespace UnityDES.Utils
         /// </summary>
         /// 
         /// <param name="item">Item to be removed</param>
-        /// <returns><c>True</c> if removal from the tree has been successful, <c>False</c> otherwise</returns>
+        /// <returns><c>True</c> if the removal from the tree has been successful, <c>False</c> otherwise</returns>
         public bool Remove(TItem item)
         {
             var nodeIndex = IndexOf(item);

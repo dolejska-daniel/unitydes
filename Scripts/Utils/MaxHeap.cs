@@ -7,7 +7,8 @@ namespace UnityDES.Utils
     /// </summary>
     public class MaxHeap<V> : Heap<V>
     {
-        public MaxHeap(IEnumerable<V> items = null, IComparer<V> comparer = null) : base(items, comparer)
+        public MaxHeap(IEnumerable<V> items = null, IComparer<V> comparer = null)
+            : base(items, comparer)
         {
         }
 
