@@ -10,7 +10,7 @@ namespace UnityDES
     /// <typeparam name="TEvent">Type of the event</typeparam>
     /// <typeparam name="TKey">Type of the simulation time</typeparam>
     public interface ISimulationController<TEvent, TKey>
-        where TEvent : IEvent<TEvent, TKey>
+        where TEvent : class, IEvent<TEvent, TKey>
     {
         /// <summary>
         /// Current simulation time.
@@ -36,10 +36,21 @@ namespace UnityDES
         void RunAvailableTicks(float deltaTime);
 
         /// <summary>
-        /// Adds the event (<paramref name="event"/>) to the simulation.
+        /// Schedules the <paramref name="event"/> to run within the simulation after minimum of <paramref name="scheduleTime"/> have passed.
         /// </summary>
         /// <remarks>
-        /// The event's time will be set to the current simulation time and then offset by provided number of ticks (<paramref name="tickCount"/>).
+        /// The event's time will be set to the current simulation time and then offset by calculated number of ticks based on <paramref name="scheduleTime"/> offset.
+        /// </remarks>
+        /// 
+        /// <param name="event">Event to be scheduled</param>
+        /// <param name="scheduleTime">Minimum amount of time to be skipped</param>
+        void Schedule(TEvent @event, float scheduleTime);
+
+        /// <summary>
+        /// Schedules the <paramref name="event"/> to run within the simulation after <paramref name="tickCount"/> of skipped ticks.
+        /// </summary>
+        /// <remarks>
+        /// The event's time will be set to the current simulation time and then offset by provided <paramref name="tickCount"/>.
         /// </remarks>
         /// 
         /// <param name="event">Event to be scheduled</param>

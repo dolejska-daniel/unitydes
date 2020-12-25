@@ -90,6 +90,9 @@ namespace UnityDES
             SimulationTime.DoTick();
         }
 
+        public void Schedule(EventBase<SimulationTime> @event, float scheduleTime)
+            => Schedule(@event, (int)Math.Ceiling(@event.QueueKey.TicksPerFrame * scheduleTime));
+
         public void Schedule(EventBase<SimulationTime> @event, int tickCount = 1)
         {
             // set current simulation time

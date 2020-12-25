@@ -6,6 +6,11 @@ namespace UnityDES.Events
     /// </summary>
     public abstract class SimulationTimeEvent : EventBase<SimulationTime>
     {
+        protected SimulationTimeEvent(SimulationTime simulationTime) : base()
+        {
+            QueueKey = new SimulationTime(simulationTime);
+        }
+
         protected SimulationTimeEvent(int ticksPerFrame) : base()
         {
             QueueKey = new SimulationTime(ticksPerFrame);

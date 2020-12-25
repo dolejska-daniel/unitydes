@@ -38,6 +38,8 @@ namespace UnityDES
 
         public IEnumerator RunAvailableTicksCoroutine() => Controller.RunAvailableTicksCoroutine();
 
+        public void Schedule(EventBase<SimulationTime> @event, float scheduleTime) => Controller.Schedule(@event, scheduleTime);
+
         public void Schedule(EventBase<SimulationTime> @event, int tickCount = 1) => Controller.Schedule(@event, tickCount);
 
         public bool Unschedule(EventBase<SimulationTime> @event) => Controller.Unschedule(@event);

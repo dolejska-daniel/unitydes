@@ -9,12 +9,12 @@ namespace UnityDES.Events
     /// 
     /// <typeparam name="TKey">Type of the queue key</typeparam>
     public interface IEvent<TEvent, TKey> : IQueueItem<TKey>
-        where TEvent : IEvent<TEvent, TKey>
+        where TEvent : class, IEvent<TEvent, TKey>
     {
         /// <summary>
         /// Current behaviour enumerator instance.
         /// </summary>
-        public IEnumerator<BehaviourResult> BehaviourCycle { get; }
+        public IEnumerator<BehaviourResult<TEvent, TKey>> BehaviourCycle { get; }
 
         /// <summary>
         /// Runs the behaviour of the event and manages immediate rescheduling through the simulation instance.
@@ -31,6 +31,6 @@ namespace UnityDES.Events
         /// <c>0</c> value will skip the yield and continue processing the behaviour.
         /// Value <c>&gt;0</c> will reschedule the event accordingly always of minimum 1 tick ahead.
         /// </returns>
-        public abstract IEnumerator<BehaviourResult> Behaviour();
+        public abstract IEnumerator<BehaviourResult<TEvent, TKey>> Behaviour();
     }
 }
