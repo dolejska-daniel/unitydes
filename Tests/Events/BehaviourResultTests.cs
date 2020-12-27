@@ -27,19 +27,17 @@ namespace Events
 
             result = BehaviourResult<SimulationTimeEvent, SimulationTime>.Continue();
             Assert.IsTrue(result.ContinueBehaviour);
-            Assert.IsFalse(result.ScheduleNewEvent);
+            Assert.IsFalse(result.ScheduleReferenced);
             Assert.IsFalse(result.UnscheduleEvent);
             Assert.IsFalse(result.ResetBehaviour);
-            Assert.IsNull(result.NewEvent);
-            Assert.IsTrue(result.RescheduleTime < 0);
+            Assert.IsNull(result.ReferencedEvent);
 
             result = BehaviourResult<SimulationTimeEvent, SimulationTime>.Continue(true);
             Assert.IsTrue(result.ContinueBehaviour);
-            Assert.IsFalse(result.ScheduleNewEvent);
+            Assert.IsFalse(result.ScheduleReferenced);
             Assert.IsFalse(result.UnscheduleEvent);
             Assert.IsTrue(result.ResetBehaviour);
-            Assert.IsNull(result.NewEvent);
-            Assert.IsTrue(result.RescheduleTime < 0);
+            Assert.IsNull(result.ReferencedEvent);
         }
 
         [Test]
@@ -49,19 +47,19 @@ namespace Events
 
             result = BehaviourResult<SimulationTimeEvent, SimulationTime>.Reschedule(1f, false);
             Assert.IsFalse(result.ContinueBehaviour);
-            Assert.IsFalse(result.ScheduleNewEvent);
+            Assert.IsFalse(result.ScheduleReferenced);
             Assert.IsFalse(result.UnscheduleEvent);
             Assert.IsFalse(result.ResetBehaviour);
-            Assert.IsNull(result.NewEvent);
-            Assert.AreEqual(1f, result.RescheduleTime);
+            Assert.IsNull(result.ReferencedEvent);
+            Assert.AreEqual(1f, result.SelfTime);
 
             result = BehaviourResult<SimulationTimeEvent, SimulationTime>.Reschedule(1f);
             Assert.IsFalse(result.ContinueBehaviour);
-            Assert.IsFalse(result.ScheduleNewEvent);
+            Assert.IsFalse(result.ScheduleReferenced);
             Assert.IsFalse(result.UnscheduleEvent);
             Assert.IsTrue(result.ResetBehaviour);
-            Assert.IsNull(result.NewEvent);
-            Assert.AreEqual(1f, result.RescheduleTime);
+            Assert.IsNull(result.ReferencedEvent);
+            Assert.AreEqual(1f, result.SelfTime);
         }
 
         [Test]
@@ -71,61 +69,58 @@ namespace Events
 
             result = BehaviourResult<SimulationTimeEvent, SimulationTime>.Unschedule();
             Assert.IsFalse(result.ContinueBehaviour);
-            Assert.IsFalse(result.ScheduleNewEvent);
+            Assert.IsFalse(result.ScheduleReferenced);
             Assert.IsTrue(result.UnscheduleEvent);
             Assert.IsFalse(result.ResetBehaviour);
-            Assert.IsNull(result.NewEvent);
-            Assert.IsTrue(result.RescheduleTime < 0);
+            Assert.IsNull(result.ReferencedEvent);
         }
 
         [Test]
         public void ScheduleNew()
         {
             BehaviourResult<SimulationTimeEvent, SimulationTime> result;
-            var newEvent = new PublicTestEvent();
+            var ReferencedEvent = new PublicTestEvent();
 
-            result = BehaviourResult<SimulationTimeEvent, SimulationTime>.ScheduleNew(1f, newEvent, 2f);
+            result = BehaviourResult<SimulationTimeEvent, SimulationTime>.ScheduleNew(1f, ReferencedEvent, 2f);
             Assert.IsFalse(result.ContinueBehaviour);
-            Assert.IsTrue(result.ScheduleNewEvent);
+            Assert.IsTrue(result.ScheduleReferenced);
             Assert.IsFalse(result.UnscheduleEvent);
             Assert.IsFalse(result.ResetBehaviour);
-            Assert.AreSame(newEvent, result.NewEvent);
-            Assert.AreEqual(2f, result.NewEventScheduleTime);
-            Assert.AreEqual(1f, result.RescheduleTime);
+            Assert.AreSame(ReferencedEvent, result.ReferencedEvent);
+            Assert.AreEqual(2f, result.ReferencedTime);
+            Assert.AreEqual(1f, result.SelfTime);
 
-            result = BehaviourResult<SimulationTimeEvent, SimulationTime>.ScheduleNew(1f, newEvent, 2f, true);
+            result = BehaviourResult<SimulationTimeEvent, SimulationTime>.ScheduleNew(1f, ReferencedEvent, 2f, true);
             Assert.IsFalse(result.ContinueBehaviour);
-            Assert.IsTrue(result.ScheduleNewEvent);
+            Assert.IsTrue(result.ScheduleReferenced);
             Assert.IsFalse(result.UnscheduleEvent);
             Assert.IsTrue(result.ResetBehaviour);
-            Assert.AreSame(newEvent, result.NewEvent);
-            Assert.AreEqual(2f, result.NewEventScheduleTime);
-            Assert.AreEqual(1f, result.RescheduleTime);
+            Assert.AreSame(ReferencedEvent, result.ReferencedEvent);
+            Assert.AreEqual(2f, result.ReferencedTime);
+            Assert.AreEqual(1f, result.SelfTime);
         }
 
         [Test]
         public void ScheduleNewAndContinue()
         {
             BehaviourResult<SimulationTimeEvent, SimulationTime> result;
-            var newEvent = new PublicTestEvent();
+            var ReferencedEvent = new PublicTestEvent();
 
-            result = BehaviourResult<SimulationTimeEvent, SimulationTime>.ScheduleNewAndContinue(newEvent, 2f);
+            result = BehaviourResult<SimulationTimeEvent, SimulationTime>.ScheduleNewAndContinue(ReferencedEvent, 2f);
             Assert.IsTrue(result.ContinueBehaviour);
-            Assert.IsTrue(result.ScheduleNewEvent);
+            Assert.IsTrue(result.ScheduleReferenced);
             Assert.IsFalse(result.UnscheduleEvent);
             Assert.IsFalse(result.ResetBehaviour);
-            Assert.AreSame(newEvent, result.NewEvent);
-            Assert.AreEqual(2f, result.NewEventScheduleTime);
-            Assert.IsTrue(result.RescheduleTime < 0);
+            Assert.AreSame(ReferencedEvent, result.ReferencedEvent);
+            Assert.AreEqual(2f, result.ReferencedTime);
 
-            result = BehaviourResult<SimulationTimeEvent, SimulationTime>.ScheduleNewAndContinue(newEvent, 2f, true);
+            result = BehaviourResult<SimulationTimeEvent, SimulationTime>.ScheduleNewAndContinue(ReferencedEvent, 2f, true);
             Assert.IsTrue(result.ContinueBehaviour);
-            Assert.IsTrue(result.ScheduleNewEvent);
+            Assert.IsTrue(result.ScheduleReferenced);
             Assert.IsFalse(result.UnscheduleEvent);
             Assert.IsTrue(result.ResetBehaviour);
-            Assert.AreSame(newEvent, result.NewEvent);
-            Assert.AreEqual(2f, result.NewEventScheduleTime);
-            Assert.IsTrue(result.RescheduleTime < 0);
+            Assert.AreSame(ReferencedEvent, result.ReferencedEvent);
+            Assert.AreEqual(2f, result.ReferencedTime);
         }
     }
 }

@@ -17,7 +17,8 @@ namespace UnityDES.Events
         public IEnumerator<BehaviourResult<TEvent, TKey>> BehaviourCycle { get; }
 
         /// <summary>
-        /// Runs the behaviour of the event and manages immediate rescheduling through the simulation instance.
+        /// Runs the behaviour of the event and manages its immediate rescheduling through the simulation instance.
+        /// It also processes any simulation requests the event's behaviour could have - schedule/unschedule referenced event, etc.
         /// </summary>
         void Run(ISimulationController<TEvent, TKey> simulationController);
 
@@ -26,11 +27,7 @@ namespace UnityDES.Events
         /// Its logic can be split into multiple stages using yield.
         /// </summary>
         /// 
-        /// <returns>
-        /// <c>Null</c> value will remove the event from the queue.
-        /// <c>0</c> value will skip the yield and continue processing the behaviour.
-        /// Value <c>&gt;0</c> will reschedule the event accordingly always of minimum 1 tick ahead.
-        /// </returns>
+        /// <returns><see cref="BehaviourResult{TEvent, TKey}"/> describing what the event wants to do</returns>
         public abstract IEnumerator<BehaviourResult<TEvent, TKey>> Behaviour();
     }
 }

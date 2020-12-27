@@ -85,41 +85,37 @@ namespace Events
 
             var iterator = @event.Behaviour();
             Assert.AreEqual(0, @event.State);
-            Assert.IsTrue(iterator.Current.RescheduleTime == 0);
             Assert.IsFalse(iterator.Current.ContinueBehaviour);
-            Assert.IsFalse(iterator.Current.ScheduleNewEvent);
+            Assert.IsFalse(iterator.Current.ScheduleReferenced);
             Assert.IsFalse(iterator.Current.UnscheduleEvent);
             Assert.IsFalse(iterator.Current.ResetBehaviour);
 
             Assert.IsTrue(iterator.MoveNext());
             Assert.AreEqual(1, @event.State);
-            Assert.AreEqual(.25f, iterator.Current.RescheduleTime);
+            Assert.AreEqual(.25f, iterator.Current.SelfTime);
             Assert.IsFalse(iterator.Current.ContinueBehaviour);
-            Assert.IsFalse(iterator.Current.ScheduleNewEvent);
+            Assert.IsFalse(iterator.Current.ScheduleReferenced);
             Assert.IsFalse(iterator.Current.UnscheduleEvent);
             Assert.IsFalse(iterator.Current.ResetBehaviour);
 
             Assert.IsTrue(iterator.MoveNext());
             Assert.AreEqual(2, @event.State);
-            Assert.IsTrue(iterator.Current.RescheduleTime <= 0);
             Assert.IsTrue(iterator.Current.ContinueBehaviour);
-            Assert.IsFalse(iterator.Current.ScheduleNewEvent);
+            Assert.IsFalse(iterator.Current.ScheduleReferenced);
             Assert.IsFalse(iterator.Current.UnscheduleEvent);
             Assert.IsFalse(iterator.Current.ResetBehaviour);
 
             Assert.IsTrue(iterator.MoveNext());
             Assert.AreEqual(3, @event.State);
-            Assert.IsTrue(iterator.Current.RescheduleTime <= 0);
             Assert.IsTrue(iterator.Current.ContinueBehaviour);
-            Assert.IsTrue(iterator.Current.ScheduleNewEvent);
+            Assert.IsTrue(iterator.Current.ScheduleReferenced);
             Assert.IsFalse(iterator.Current.UnscheduleEvent);
             Assert.IsFalse(iterator.Current.ResetBehaviour);
 
             Assert.IsTrue(iterator.MoveNext());
             Assert.AreEqual(4, @event.State);
-            Assert.IsTrue(iterator.Current.RescheduleTime <= 0);
             Assert.IsFalse(iterator.Current.ContinueBehaviour);
-            Assert.IsFalse(iterator.Current.ScheduleNewEvent);
+            Assert.IsFalse(iterator.Current.ScheduleReferenced);
             Assert.IsTrue(iterator.Current.UnscheduleEvent);
             Assert.IsFalse(iterator.Current.ResetBehaviour);
 
