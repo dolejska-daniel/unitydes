@@ -14,7 +14,7 @@ namespace Events
             {
             }
 
-            public override IEnumerator<BehaviourResult<EventBase<SimulationTime>, SimulationTime>> Behaviour()
+            public override IEnumerator<BehaviourResult<SimulationTimeEvent, SimulationTime>> Behaviour()
             {
                 yield return Reschedule(1f);
             }
@@ -23,9 +23,9 @@ namespace Events
         [Test]
         public void Continue()
         {
-            BehaviourResult<EventBase<SimulationTime>, SimulationTime> result;
+            BehaviourResult<SimulationTimeEvent, SimulationTime> result;
 
-            result = BehaviourResult<EventBase<SimulationTime>, SimulationTime>.Continue();
+            result = BehaviourResult<SimulationTimeEvent, SimulationTime>.Continue();
             Assert.IsTrue(result.ContinueBehaviour);
             Assert.IsFalse(result.ScheduleNewEvent);
             Assert.IsFalse(result.UnscheduleEvent);
@@ -33,7 +33,7 @@ namespace Events
             Assert.IsNull(result.NewEvent);
             Assert.IsTrue(result.RescheduleTime < 0);
 
-            result = BehaviourResult<EventBase<SimulationTime>, SimulationTime>.Continue(true);
+            result = BehaviourResult<SimulationTimeEvent, SimulationTime>.Continue(true);
             Assert.IsTrue(result.ContinueBehaviour);
             Assert.IsFalse(result.ScheduleNewEvent);
             Assert.IsFalse(result.UnscheduleEvent);
@@ -45,9 +45,9 @@ namespace Events
         [Test]
         public void Reschedule()
         {
-            BehaviourResult<EventBase<SimulationTime>, SimulationTime> result;
+            BehaviourResult<SimulationTimeEvent, SimulationTime> result;
 
-            result = BehaviourResult<EventBase<SimulationTime>, SimulationTime>.Reschedule(1f, false);
+            result = BehaviourResult<SimulationTimeEvent, SimulationTime>.Reschedule(1f, false);
             Assert.IsFalse(result.ContinueBehaviour);
             Assert.IsFalse(result.ScheduleNewEvent);
             Assert.IsFalse(result.UnscheduleEvent);
@@ -55,7 +55,7 @@ namespace Events
             Assert.IsNull(result.NewEvent);
             Assert.AreEqual(1f, result.RescheduleTime);
 
-            result = BehaviourResult<EventBase<SimulationTime>, SimulationTime>.Reschedule(1f);
+            result = BehaviourResult<SimulationTimeEvent, SimulationTime>.Reschedule(1f);
             Assert.IsFalse(result.ContinueBehaviour);
             Assert.IsFalse(result.ScheduleNewEvent);
             Assert.IsFalse(result.UnscheduleEvent);
@@ -67,9 +67,9 @@ namespace Events
         [Test]
         public void Unschedule()
         {
-            BehaviourResult<EventBase<SimulationTime>, SimulationTime> result;
+            BehaviourResult<SimulationTimeEvent, SimulationTime> result;
 
-            result = BehaviourResult<EventBase<SimulationTime>, SimulationTime>.Unschedule();
+            result = BehaviourResult<SimulationTimeEvent, SimulationTime>.Unschedule();
             Assert.IsFalse(result.ContinueBehaviour);
             Assert.IsFalse(result.ScheduleNewEvent);
             Assert.IsTrue(result.UnscheduleEvent);
@@ -81,10 +81,10 @@ namespace Events
         [Test]
         public void ScheduleNew()
         {
-            BehaviourResult<EventBase<SimulationTime>, SimulationTime> result;
+            BehaviourResult<SimulationTimeEvent, SimulationTime> result;
             var newEvent = new PublicTestEvent();
 
-            result = BehaviourResult<EventBase<SimulationTime>, SimulationTime>.ScheduleNew(1f, newEvent, 2f);
+            result = BehaviourResult<SimulationTimeEvent, SimulationTime>.ScheduleNew(1f, newEvent, 2f);
             Assert.IsFalse(result.ContinueBehaviour);
             Assert.IsTrue(result.ScheduleNewEvent);
             Assert.IsFalse(result.UnscheduleEvent);
@@ -93,7 +93,7 @@ namespace Events
             Assert.AreEqual(2f, result.NewEventScheduleTime);
             Assert.AreEqual(1f, result.RescheduleTime);
 
-            result = BehaviourResult<EventBase<SimulationTime>, SimulationTime>.ScheduleNew(1f, newEvent, 2f, true);
+            result = BehaviourResult<SimulationTimeEvent, SimulationTime>.ScheduleNew(1f, newEvent, 2f, true);
             Assert.IsFalse(result.ContinueBehaviour);
             Assert.IsTrue(result.ScheduleNewEvent);
             Assert.IsFalse(result.UnscheduleEvent);
@@ -106,10 +106,10 @@ namespace Events
         [Test]
         public void ScheduleNewAndContinue()
         {
-            BehaviourResult<EventBase<SimulationTime>, SimulationTime> result;
+            BehaviourResult<SimulationTimeEvent, SimulationTime> result;
             var newEvent = new PublicTestEvent();
 
-            result = BehaviourResult<EventBase<SimulationTime>, SimulationTime>.ScheduleNewAndContinue(newEvent, 2f);
+            result = BehaviourResult<SimulationTimeEvent, SimulationTime>.ScheduleNewAndContinue(newEvent, 2f);
             Assert.IsTrue(result.ContinueBehaviour);
             Assert.IsTrue(result.ScheduleNewEvent);
             Assert.IsFalse(result.UnscheduleEvent);
@@ -118,7 +118,7 @@ namespace Events
             Assert.AreEqual(2f, result.NewEventScheduleTime);
             Assert.IsTrue(result.RescheduleTime < 0);
 
-            result = BehaviourResult<EventBase<SimulationTime>, SimulationTime>.ScheduleNewAndContinue(newEvent, 2f, true);
+            result = BehaviourResult<SimulationTimeEvent, SimulationTime>.ScheduleNewAndContinue(newEvent, 2f, true);
             Assert.IsTrue(result.ContinueBehaviour);
             Assert.IsTrue(result.ScheduleNewEvent);
             Assert.IsFalse(result.UnscheduleEvent);

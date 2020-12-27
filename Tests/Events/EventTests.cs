@@ -21,7 +21,7 @@ namespace Events
 
             public PublicTestEvent ScheduledEvent { get; protected set; }
 
-            public override IEnumerator<BehaviourResult<EventBase<SimulationTime>, SimulationTime>> Behaviour()
+            public override IEnumerator<BehaviourResult<SimulationTimeEvent, SimulationTime>> Behaviour()
             {
                 State = 1;
                 // reschedule to next tick
@@ -44,9 +44,9 @@ namespace Events
             public new void IncreaseKey(float time) => base.IncreaseKey(time);
         }
 
-        public class PublicSimulationController : SimulationController
+        public class PublicSimulationController : SimulationController<SimulationTimeEvent>
         {
-            public PriorityQueue<EventBase<SimulationTime>, SimulationTime> QueuedEvents { get => Events; }
+            public PriorityQueue<SimulationTimeEvent, SimulationTime> QueuedEvents { get => Events; }
 
             public PublicSimulationController(int ticksPerFrame) : base(ticksPerFrame)
             {

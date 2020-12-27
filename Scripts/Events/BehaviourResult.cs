@@ -19,7 +19,7 @@ namespace UnityDES.Events
         const float TIME_UNSCHEDULE = -2f;
 
         /// <summary>
-        /// Minimum number of time to pass before running the event's behaviour again.
+        /// Minimum amount of time to pass before running the event's behaviour again.
         /// </summary>
         /// <remarks>
         /// Values <c>&lt;0</c> are reserved for other result states.
@@ -52,7 +52,7 @@ namespace UnityDES.Events
         public TEvent NewEvent { get; internal set; }
 
         /// <summary>
-        /// .
+        /// Minimum amount of time to pass before running the event.
         /// </summary>
         public float NewEventScheduleTime { get; internal set; }
 

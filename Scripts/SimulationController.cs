@@ -10,7 +10,8 @@ namespace UnityDES
     /// <summary>
     /// The main class controlling the simulation.
     /// </summary>
-    public class SimulationController : ISimulationController<EventBase<SimulationTime>, SimulationTime>
+    public class SimulationController<TEvent> : ISimulationController<TEvent, SimulationTime>
+        where TEvent : class, IEvent<TEvent, SimulationTime>
     {
         public SimulationTime SimulationTime { get; protected set; }
 
@@ -21,12 +22,12 @@ namespace UnityDES
         /// <summary>
         /// Queue of the simulation events.
         /// </summary>
-        protected PriorityQueue<EventBase<SimulationTime>, SimulationTime> Events;
+        protected PriorityQueue<TEvent, SimulationTime> Events;
 
         /// <summary>
         /// Comparer of the simulation events for the queue.
         /// </summary>
-        public static readonly Comparer<EventBase<SimulationTime>> EventComparer = Comparer<EventBase<SimulationTime>>.Create(
+        public static readonly Comparer<TEvent> EventComparer = Comparer<TEvent>.Create(
             (a, b) => SimulationTime.Comparer.Compare(a.QueueKey, b.QueueKey));
 
         /// <summary>
@@ -35,7 +36,7 @@ namespace UnityDES
         public SimulationController(int ticksPerFrame = 1)
         {
             SimulationTime = new SimulationTime(ticksPerFrame);
-            Events = new PriorityQueue<EventBase<SimulationTime>, SimulationTime>(EventComparer);
+            Events = new PriorityQueue<TEvent, SimulationTime>(EventComparer);
         }
 
         public IEnumerator RunAvailableTicksCoroutine()
@@ -90,10 +91,10 @@ namespace UnityDES
             SimulationTime.DoTick();
         }
 
-        public void Schedule(EventBase<SimulationTime> @event, float scheduleTime)
+        public void Schedule(TEvent @event, float scheduleTime)
             => Schedule(@event, (int)Math.Ceiling(@event.QueueKey.TicksPerFrame * scheduleTime));
 
-        public void Schedule(EventBase<SimulationTime> @event, int tickCount = 1)
+        public void Schedule(TEvent @event, int tickCount = 1)
         {
             // set current simulation time
             @event.QueueKey.Frame = SimulationTime.Frame;
@@ -105,13 +106,13 @@ namespace UnityDES
             Events.Enqueue(@event);
         }
 
-        public bool Reschedule(EventBase<SimulationTime> @event)
+        public bool Reschedule(TEvent @event)
         {
             // re-enqueue the event
             return Events.Update(@event);
         }
 
-        public bool Unschedule(EventBase<SimulationTime> @event)
+        public bool Unschedule(TEvent @event)
         {
             // remove the event from the queue
             return Events.Dequeue(@event);

@@ -8,13 +8,14 @@ namespace UnityDES.Events
     /// </summary>
     /// 
     /// <typeparam name="TKey">Type of the queue key</typeparam>
-    public abstract class EventBase<TKey> : IEvent<EventBase<TKey>, TKey>
+    public abstract class EventBase<TEvent, TKey> : IEvent<TEvent, TKey>
+        where TEvent : class, IEvent<TEvent, TKey>
     {
         public TKey QueueKey { get; set; }
 
         public TKey SimulationTime { get => QueueKey; }
 
-        public IEnumerator<BehaviourResult<EventBase<TKey>, TKey>> BehaviourCycle { get; protected set; }
+        public IEnumerator<BehaviourResult<TEvent, TKey>> BehaviourCycle { get; protected set; }
 
         /// <summary>
         /// Initializes BehaviourCycle property.
@@ -25,18 +26,26 @@ namespace UnityDES.Events
         }
 
         /// <summary>
+        /// Returns instance of the generic event derived from this class.
+        /// This method is necessary for correct type checking.
+        /// </summary>
+        /// 
+        /// <returns>Current instance of the generic event</returns>
+        protected abstract TEvent This();
+
+        /// <summary>
         /// Updates the key so the event's execution happens in the future based on value of <paramref name="time"/>.
         /// </summary>
         /// 
         /// <param name="time">Time offset into the future</param>
         protected abstract void IncreaseKey(float time);
 
-        public abstract IEnumerator<BehaviourResult<EventBase<TKey>, TKey>> Behaviour();
+        public abstract IEnumerator<BehaviourResult<TEvent, TKey>> Behaviour();
 
-        public void Run(ISimulationController<EventBase<TKey>, TKey> simulationController)
+        public void Run(ISimulationController<TEvent, TKey> simulationController)
         {
             bool unfinished;
-            BehaviourResult<EventBase<TKey>, TKey> behaviourResult;
+            BehaviourResult<TEvent, TKey> behaviourResult;
 
             do
             {
@@ -57,7 +66,7 @@ namespace UnityDES.Events
                 IncreaseKey(behaviourResult.RescheduleTime);
 
                 // reschedule the event
-                if (!simulationController.Reschedule(this))
+                if (!simulationController.Reschedule(This()))
                     throw new ApplicationException("Rescheduling of existing event has failed!");
 
                 if (behaviourResult.ResetBehaviour)
@@ -70,28 +79,28 @@ namespace UnityDES.Events
             {
                 // the event's behaviour either completely finished or it voluntarily wants to be unscheduled
                 // remove the event from the simulation
-                simulationController.Unschedule(this);
+                simulationController.Unschedule(This());
             }
         }
 
         /// <inheritdoc cref="BehaviourResult{TEvent, TKey}.ScheduleNew(float, TEvent, float, bool)"/>
-        protected BehaviourResult<EventBase<TKey>, TKey> ScheduleNew(float rescheduleTime, EventBase<TKey> @event, float scheduleTime, bool reset = false)
-            => BehaviourResult<EventBase<TKey>, TKey>.ScheduleNew(rescheduleTime, @event, scheduleTime, reset);
+        protected BehaviourResult<TEvent, TKey> ScheduleNew(float rescheduleTime, TEvent @event, float scheduleTime, bool reset = false)
+            => BehaviourResult<TEvent, TKey>.ScheduleNew(rescheduleTime, @event, scheduleTime, reset);
 
         /// <inheritdoc cref="BehaviourResult{TEvent, TKey}.ScheduleNewAndContinue(TEvent, float, bool)"/>
-        protected BehaviourResult<EventBase<TKey>, TKey> ScheduleNewAndContinue(EventBase<TKey> @event, float scheduleTime, bool reset = false)
-            => BehaviourResult<EventBase<TKey>, TKey>.ScheduleNewAndContinue(@event, scheduleTime, reset);
+        protected BehaviourResult<TEvent, TKey> ScheduleNewAndContinue(TEvent @event, float scheduleTime, bool reset = false)
+            => BehaviourResult<TEvent, TKey>.ScheduleNewAndContinue(@event, scheduleTime, reset);
 
         /// <inheritdoc cref="BehaviourResult{TEvent, TKey}.Continue(bool)"/>
-        protected BehaviourResult<EventBase<TKey>, TKey> Continue(bool reset = false)
-            => BehaviourResult<EventBase<TKey>, TKey>.Continue(reset);
+        protected BehaviourResult<TEvent, TKey> Continue(bool reset = false)
+            => BehaviourResult<TEvent, TKey>.Continue(reset);
 
         /// <inheritdoc cref="BehaviourResult{TEvent, TKey}.Reschedule(float, bool)"/>
-        protected BehaviourResult<EventBase<TKey>, TKey> Reschedule(float rescheduleTime, bool reset = true)
-            => BehaviourResult<EventBase<TKey>, TKey>.Reschedule(rescheduleTime, reset);
+        protected BehaviourResult<TEvent, TKey> Reschedule(float rescheduleTime, bool reset = true)
+            => BehaviourResult<TEvent, TKey>.Reschedule(rescheduleTime, reset);
 
         /// <inheritdoc cref="BehaviourResult{TEvent, TKey}.Unschedule"/>
-        protected BehaviourResult<EventBase<TKey>, TKey> Unschedule()
-            => BehaviourResult<EventBase<TKey>, TKey>.Unschedule();
+        protected BehaviourResult<TEvent, TKey> Unschedule()
+            => BehaviourResult<TEvent, TKey>.Unschedule();
     }
 }

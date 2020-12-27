@@ -15,7 +15,7 @@ namespace Controls
             {
             }
 
-            public override IEnumerator<BehaviourResult<EventBase<SimulationTime>, SimulationTime>> Behaviour()
+            public override IEnumerator<BehaviourResult<SimulationTimeEvent, SimulationTime>> Behaviour()
             {
                 // reschedule to next tick
                 yield return Reschedule(QueueKey.TickLength, false);
@@ -27,7 +27,7 @@ namespace Controls
             public new void IncreaseKey(float time) => base.IncreaseKey(time);
         }
 
-        public class PublicFacility : Facility<EventBase<SimulationTime>, SimulationTime>
+        public class PublicFacility : Facility<SimulationTimeEvent, SimulationTime>
         {
             public new PriorityQueue<FacilityEntry, int> WaitingQueue { get => base.WaitingQueue; }
 
@@ -35,9 +35,9 @@ namespace Controls
 
             public new SortedSet<FacilityEntry> Inside { get => base.Inside; }
 
-            public new Dictionary<EventBase<SimulationTime>, FacilityEntry> EventEntryMapping { get => base.EventEntryMapping; }
+            public new Dictionary<SimulationTimeEvent, FacilityEntry> EventEntryMapping { get => base.EventEntryMapping; }
 
-            public PublicFacility(ISimulationController<EventBase<SimulationTime>, SimulationTime> controller, int capacity = 1) : base(controller, capacity)
+            public PublicFacility(ISimulationController<SimulationTimeEvent, SimulationTime> controller, int capacity = 1) : base(controller, capacity)
             {
             }
         }
@@ -45,7 +45,7 @@ namespace Controls
         [Test]
         public void Claim_Free()
         {
-            var controller = new SimulationController(4);
+            var controller = new SimulationController<SimulationTimeEvent>(4);
             var facility = new PublicFacility(controller);
 
             var event1 = new PublicEvent(4);
@@ -71,7 +71,7 @@ namespace Controls
         [Test]
         public void Claim_Full()
         {
-            var controller = new SimulationController(4);
+            var controller = new SimulationController<SimulationTimeEvent>(4);
             var facility = new PublicFacility(controller);
 
             var event1 = new PublicEvent(4);
@@ -98,7 +98,7 @@ namespace Controls
         [Test]
         public void Claim_Full_Priority()
         {
-            var controller = new SimulationController(4);
+            var controller = new SimulationController<SimulationTimeEvent>(4);
             var facility = new PublicFacility(controller);
 
             var event1 = new PublicEvent(4);
@@ -128,7 +128,7 @@ namespace Controls
         [Test]
         public void Claim_Full_PrioritySelction()
         {
-            var controller = new SimulationController(4);
+            var controller = new SimulationController<SimulationTimeEvent>(4);
             var facility = new PublicFacility(controller);
 
             var event1 = new PublicEvent(4);
@@ -164,7 +164,7 @@ namespace Controls
         [Test]
         public void Free()
         {
-            var controller = new SimulationController(4);
+            var controller = new SimulationController<SimulationTimeEvent>(4);
             var facility = new PublicFacility(controller);
 
             var event1 = new PublicEvent(4);
@@ -190,7 +190,7 @@ namespace Controls
         [Test]
         public void Free_WithWaiting()
         {
-            var controller = new SimulationController(4);
+            var controller = new SimulationController<SimulationTimeEvent>(4);
             var facility = new PublicFacility(controller);
 
             var event1 = new PublicEvent(4);
@@ -220,7 +220,7 @@ namespace Controls
         [Test]
         public void Free_WithInterrupted()
         {
-            var controller = new SimulationController(4);
+            var controller = new SimulationController<SimulationTimeEvent>(4);
             var facility = new PublicFacility(controller);
 
             var event1 = new PublicEvent(4);
@@ -253,7 +253,7 @@ namespace Controls
         [Test]
         public void Free_WithWaiting_WithInterrupted()
         {
-            var controller = new SimulationController(4);
+            var controller = new SimulationController<SimulationTimeEvent>(4);
             var facility = new PublicFacility(controller);
 
             var event1 = new PublicEvent(4);
