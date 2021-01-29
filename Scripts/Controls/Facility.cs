@@ -156,7 +156,7 @@ namespace UnityDES.Controls
                 // register active claim of the event
                 Inside.Add(entry);
                 // run registered event handlers
-                OnFacilityEnter.Invoke(entry.Event);
+                OnFacilityEnter?.Invoke(entry.Event);
 
                 // claim has been registered, continue with the event's behaviour
                 return BehaviourResult<TEvent, TKey>.Continue();
@@ -170,7 +170,7 @@ namespace UnityDES.Controls
                 // add this new entry to the waiting queue
                 WaitingQueue.Enqueue(entry);
                 // run registered event handlers
-                OnQueueEnter.Invoke(entry.Event);
+                OnQueueEnter?.Invoke(entry.Event);
 
                 // the event is waiting, it is necessary to remove it from the simulation
                 // until the claim is ready
@@ -186,12 +186,12 @@ namespace UnityDES.Controls
             // add it to the queue of interrupted entries
             InterruptedQueue.Enqueue(existingEntry);
             // run registered event handlers
-            OnFacilityInterrupt.Invoke(existingEntry.Event);
+            OnFacilityInterrupt?.Invoke(existingEntry.Event);
 
             // add new entry inside the facility
             Inside.Add(entry);
             // run registered event handlers
-            OnFacilityEnter.Invoke(entry.Event);
+            OnFacilityEnter?.Invoke(entry.Event);
 
             // continue processing the event's behaviour
             return BehaviourResult<TEvent, TKey>.Continue();
@@ -213,7 +213,7 @@ namespace UnityDES.Controls
             // remove the entry from inside the facility
             Inside.Remove(entry);
             // run registered event handlers
-            OnFacilityLeave.Invoke(entry.Event);
+            OnFacilityLeave?.Invoke(entry.Event);
 
             // the event may free before actually acquiring the facility
             // make sure the internal queues are clear
@@ -231,7 +231,7 @@ namespace UnityDES.Controls
                 // activate the events claim of the facility
                 Inside.Add(interruptedEntry);
                 // run registered event handlers
-                OnFacilityEnter.Invoke(interruptedEntry.Event);
+                OnFacilityEnter?.Invoke(interruptedEntry.Event);
 
                 // schedule the event to be run this tick
                 Controller.Schedule(interruptedEntry.Event, 0);
@@ -243,12 +243,12 @@ namespace UnityDES.Controls
                 // there is both a waiting event and a free slot in the facility
                 var waitingEntry = WaitingQueue.Dequeue();
                 // run registered event handlers
-                OnQueueLeave.Invoke(waitingEntry.Event);
+                OnQueueLeave?.Invoke(waitingEntry.Event);
 
                 // activate the events claim of the facility
                 Inside.Add(waitingEntry);
                 // run registered event handlers
-                OnFacilityEnter.Invoke(waitingEntry.Event);
+                OnFacilityEnter?.Invoke(waitingEntry.Event);
 
                 // schedule the event to be run this simulation tick
                 Controller.Schedule(waitingEntry.Event, 0);
